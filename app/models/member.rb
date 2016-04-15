@@ -1,9 +1,22 @@
 class Member < ActiveRecord::Base
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, # :validatable,
+         :confirmable
+
+  # Setup accessible (or protected) attributes for your model
+  attr_accessible :email, :password, :password_confirmation, :remember_me
   # include HasContactInfo
 
   #has_paper_trail
 
   has_contact_info
+  belongs_to :primary_email, class_name: 'EmailAddress'
+  after_commit :save_primary_email, on: :create
+
+  validates :primary_email, presence: true
+  default_scope { includes :primary_email }
 
   has_note
 
@@ -59,6 +72,29 @@ class Member < ActiveRecord::Base
   def self.has_qualifications( aids )
     uids = Qualification.where( :award_id => aids ).pluck( :member_id ).uniq
     Member.where( :id => uids )
+  end
+
+  #Override devise to work with EmailAddresses
+  def self.having_email email
+    Member.includes( :email_addresses ).where( 'members.primary_email_id = email_addresses.id AND email_addresses.address = ?', email ).first
+  end
+
+  #Override devise to work with EmailAddresses
+  def self.find_first_by_auth_conditions warden_conditions
+    conditions = warden_conditions.dup
+    if email = conditions.delete(:email)
+      having_email email
+    else
+      super(warden_conditions)
+    end
+  end
+
+  def email
+    primary_email.address rescue nil
+  end
+
+  def email= email
+    self.primary_email = email_addresses.where( address: email ).first_or_initialize
   end
 
   def public_email_addresses

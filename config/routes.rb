@@ -6,14 +6,14 @@ PaddleSportsNorthAmerica::Application.routes.draw do
 
   get 'home' => "home#index"
   get 'about' => "home#about"
-  
+
   get 'calendar' => "calendar#index", as: :calendar
 
   #get 'coaches' => "home#paddlers"
   get 'coaches' => "coaches#index"
   get 'documents' => "home#coaches"
   get 'membership' => "home#membership"
-  
+
   get 'about/candidates' => "home#candidates"
 
   get 'contact' => "contact#index"
@@ -25,7 +25,7 @@ PaddleSportsNorthAmerica::Application.routes.draw do
 
   namespace :admin do
     get 'members/autocomplete' => 'members#autocomplete'
-    # get '', to: 'dashboard#index', as: '/' 
+    # get '', to: 'dashboard#index', as: '/'
     resources :members do
       resources :addresses
       resources :phone_numbers
@@ -57,5 +57,5 @@ PaddleSportsNorthAmerica::Application.routes.draw do
   # end
 
   devise_for :admin_users, ActiveAdmin::Devise.config
-
+  devise_for :members
 end

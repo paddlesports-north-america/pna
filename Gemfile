@@ -36,7 +36,8 @@ gem "unicorn", ">= 4.3.1", :group => :production
 
 gem "pg", ">= 0.15.0"
 
-gem "rspec-rails", ">= 2.12.2", :group => [:development, :test]
+# gem "rspec-rails", ">= 2.12.2", :group => [:development, :test]
+gem "rspec-rails", "~> 3.4.2", :group => [:development, :test]
 gem "capybara", ">= 2.0.3", :group => :test
 gem "database_cleaner", ">= 1.0.0.RC1", :group => :test
 gem "email_spec", ">= 1.4.0", :group => :test
