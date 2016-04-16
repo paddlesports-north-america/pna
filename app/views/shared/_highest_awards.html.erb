@@ -1,0 +1,9 @@
+<ul class="qualifications">
+  <% for_types.each do |type| %>
+    <% if highest_awards_by_type( member, type).any? %>
+      <% highest_awards_by_type( member, type ).each do |a| %>
+        <li class="<%= type %>"><%= a.name %></li>
+      <% end %>
+    <% end %>
+  <% end %>
+</ul>

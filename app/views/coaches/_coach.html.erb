@@ -8,21 +8,15 @@
   </div>
   <div class="col-md-4">
     <!-- <h5 class="hidden-xs hidden-sm">BC Coaching Credentials</h5> -->
-    
-    <ul class="qualifications">
-      <% highest_awards_by_type( coach, [Pna::ProgramType::COACHING, Pna::ProgramType::LEGACY ] ).each do |a| %>
-        <li><%= a.name %></li>
-      <% end %>
-      <% highest_awards_by_type( coach, Pna::ProgramType::ENDORSEMENT ).each do |a| %>
-        <li><%= a.name %></li>
-      <% end %>
-      <% if coach.awards.where( :award_type => Pna::ProgramType::PROVIDER ).any? %>
-        <li>&nbsp;</li>
-        <% highest_awards_by_type( coach, Pna::ProgramType::PROVIDER ).each do |a| %>
-        <li class="endorsement"><%= a.name %></li>
-        <% end %>
-      <% end %>
-    </ul>
+
+    <%= render partial: 'shared/highest_awards', locals: { member: coach, for_types: [
+        [
+          Pna::ProgramType::COACHING, 
+          Pna::ProgramType::LEGACY
+        ],
+        Pna::ProgramType::ENDORSEMENT,
+        Pna::ProgramType::PROVIDER
+      ] } %>
   </div>
   <div class="col-md-4">
     <% unless coach.public_email_addresses.empty? %>
@@ -30,7 +24,7 @@
           <%= link_to e.address, "mailto:#{e.address}" %><br />
         <% end %>
       <% end %>
-      
+
       <% unless coach.centers.empty? %>
         <% coach.centers.each do |center| %>
           <% if center.url %>
@@ -38,7 +32,7 @@
           <% end %>
         <% end %>
       <% end %>
-      
+
       <% unless coach.public_phone_numbers.empty? %>
         <% coach.public_phone_numbers.where( :public => true ).each do |p| %>
           <%= p.to_s %>

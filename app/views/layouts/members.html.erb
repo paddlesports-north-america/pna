@@ -1,0 +1,17 @@
+<!-- renders as sub-layout of application -->
+<% content_for :content do %>
+<div class="container">
+  <div class="row">
+    <div class="col-md-2 col-md-offset-1 col-md-push-9">
+      <%= render 'member_nav' %>
+    </div>
+    <div class="col-md-3 col-md-pull-3">
+      <%= render partial: 'member_status' %>
+    </div>
+    <div class="col-md-6 col-md-pull-3">
+      <%= yield %>
+    </div>
+  </div>
+</div>
+<% end %>
+<%= render template: "layouts/application" %>

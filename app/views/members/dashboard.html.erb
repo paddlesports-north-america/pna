@@ -1,0 +1,15 @@
+<h2>My Awards</h2>
+<% Pna::ProgramType::ALL.each do |type| %>
+  <% if awards_by_type( @member.awards, type ).any? %>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= type.capitalize %></h3>
+      </div>
+      <ul class="list-group">
+        <% awards_by_type( @member.awards, type ).each do |award| %>
+          <li class="list-group-item"><%= award.name %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+<% end %>

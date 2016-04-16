@@ -1,0 +1,35 @@
+<div class="well  member-status">
+  <h3><%= current_member.name %></h3>
+  <% if current_member.membership.blank? %>
+    <!-- has never been a member -->
+    <p class="error">Non-member</p>
+    <a href="#">Join PNA Today!</a>
+  <% elsif current_member.membership.expiration_date < Date.today %>
+    <!-- expired membership -->
+    <p class="error">Your membership has expired!</p>
+    <p>Expiration date: <%= current_member.membership.expiration_date %>
+    <a href="#">Click here to renew your membership!</a>
+  <% elsif current_member.membership.expiration_date < 30.days.from_now.to_date %>
+    <!-- is a member, but membership will expire within 30 days -->
+    <p class="warning">Your membership is about to expire!</p>
+    <p>Expiration date: <%= current_member.membership.expiration_date %>
+    <a href="#">Click here to renew your membership!</a>
+  <% else %>
+    <!-- is a current member -->
+    <div class="alert alert-success">
+      <p><strong><%= current_member.membership.type %> Member</strong></p>
+      <p>Expiration date: <%= current_member.membership.expiration_date %></p>
+    </div>
+  <% end %>
+  <% award_types = [
+    Pna::ProgramType::LEGACY,
+    Pna::ProgramType::COACHING,
+    Pna::ProgramType::PROVIDER,
+    Pna::ProgramType::ENDORSEMENT,
+    Pna::ProgramType::LEADERSHIP,
+    Pna::ProgramType::PERFORMANCE
+  ] %>
+  <% if highest_awards_by_type( current_member, award_types ).any? %>
+    <%= render partial: 'shared/highest_awards', locals: { member: current_member, for_types: award_types } %>
+  <% end %>
+</div>

@@ -132,5 +132,19 @@ describe Member do
 
   end
 
+  describe '#membership' do
+    it 'should return the most recent membership record by expiration date' do
+      m = FactoryGirl.create( :member )
 
+      latest_membership = FactoryGirl.create( :membership, member: m, expiration_date: 2.days.from_now )
+      m.memberships << latest_membership
+
+      m.memberships << FactoryGirl.create( :membership, member: m, expiration_date: 2.years.ago )
+      m.memberships << FactoryGirl.create( :membership, member: m, expiration_date: 1.years.ago )
+      m.memberships.length.should eq( 3 )
+
+      tm = Member.find( 1 )
+      tm.membership.expiration_date.should eq( latest_membership.expiration_date )
+    end
+  end
 end

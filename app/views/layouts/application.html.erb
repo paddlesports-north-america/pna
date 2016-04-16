@@ -12,9 +12,8 @@
         </div>
       </header>
 
-
-      <%= yield %>
-
+      <!--- for easy sub tempates -->
+      <%= content_for?( :content ) ? yield( :content ) : yield %>
 
       <%= render 'layouts/footer' %>
       <script>

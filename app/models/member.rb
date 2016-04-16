@@ -89,6 +89,10 @@ class Member < ActiveRecord::Base
     end
   end
 
+  def name
+    "#{first_name} #{last_name}"
+  end
+
   def email
     primary_email.address rescue nil
   end
@@ -113,6 +117,11 @@ class Member < ActiveRecord::Base
 
   def is_coach?
     self.awards.where( :award_type => [ Pna::ProgramType::COACHING, Pna::ProgramType::LEGACY ] ).any?
+  end
+
+  def membership
+    # default scope on memberships is to order by expiration date
+    memberships.last
   end
 
   def membership_status
