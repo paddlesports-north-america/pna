@@ -80,3 +80,4 @@ pickle-email-*.html
 /config/application.yml
 public/assets
 /db/data.yml
+latest.dump

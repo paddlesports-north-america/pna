@@ -8,7 +8,7 @@
       <p>In the BCU (UKCC) system coaches can progress from Levels 1 through 4. 'UKCC' precedes the award level displayed on this page for these coaches. Under the old coaching system, coaches could progress from Levels 1 through 5. 'BCU' precedes the award level displayed on this page for these coaches. British Canoeing continues to recognize coaches with BCU coaching qualifications, i.e. coaches that are not endorsed by UKCC.</p>
       <p>Another common area of confusion is between the Coaching and Star award systems. Star awards are tests of personal and leadership skills, and are not coaching awards. However, they are prerequisites for the coaching awards (e.g. you need a 2 Star award before you can train to be a Level 1 Coach, a 3 Star award before you can train to be a Level 2 Coach, etc.). For example, there is no such thing as a '3 Star Coach'. The correct term would either be a 3 Star paddler or a Level 3 Coach.</p>
     </section>
-    
+
     </div>
   </div>
   <div class="row">
@@ -16,13 +16,13 @@
       <!-- Left Sidebar -->
 
     </div><!-- ./sidebar -->
-    
+
     <div class="col-md-7" data-hook="content">
-    
+
     <% @regions.each do |r| %>
       <section id="<%= r.name.parameterize %>">
         <h2><%= r.name %></h2>
-        
+
         <section class="state">
           <div class="row">
             <div class="col-md-6">
@@ -38,9 +38,11 @@
               </ul>
             </div>
             <div class="col-md-6">
-              <h4>Regional Representative</h4>
-              <p><%= "#{r.rco.first_name} #{r.rco.last_name}" %><br /><a href="mailto:<%= r.contact %>"><%= r.contact %></a></p>
-              <p><em>To learn more about PNA Regional Representatives, <a href="/about#regional-reps">click here</a></em></p>
+              <% unless r.rco.blank? %>
+                <h4>Regional Representative</h4>
+                <p><%= "#{r.rco.first_name} #{r.rco.last_name}" %><br /><a href="mailto:<%= r.contact %>"><%= r.contact %></a></p>
+                <p><em>To learn more about PNA Regional Representatives, <a href="/about#regional-reps">click here</a></em></p>
+              <% end %>
             </div>
           </div>
         </section>
@@ -58,7 +60,7 @@
       </section>
     <% end %>
     </div>
-    
+
     <div class="col-md-2 col-md-offset-1" data-hook="sidenav">
       <!-- right side nav -->
       <div class="sidenav hidden-sm hidden-xs scrollspy" data-spy="affix" data-offset-top="276" data-offset-bottom="360">
@@ -79,6 +81,6 @@
         </ul>
       </div>
       <!-- end right side nav -->
-    </div>      
+    </div>
   </div>
-</div>  
+</div>

@@ -55,7 +55,7 @@
 
       <section id="board" class="clearfix">
         <h2>Board of Directors</h2>
- 
+
         <span class="section" id="tobin">
           <h3>Harry Tobin <small>President</small></h3>
 
@@ -143,13 +143,13 @@
           <p>Shawna brings a good blend of energy and expertise to the PNA Board. She brings 19 years successful business experience, extensive knowledge and experience of paddle sport, and a long history and experience with British Canoeing. Her leadership and education skills are invaluable when working with others on the board. Shawna is a life time artist and can also offer graphic and design expertise to the job. Shawna is a committed and passionate paddler and coach in the paddling disciplines of sea kayaking, canoeing, kayak surfing, race kayaks and stand up paddle boarding.</p>
           <p>Shawna believes strongly in the mission and the goals of PNA. She is thrilled to be part of the process that will allow this organization to grow and to flourish and continue making unique opportunities available for new paddlers and experienced paddlers alike in their development and aspirations.</p>
         </span><!-- ./franklin -->
-        
+
         <span class="section" id="johnstone-wright">
           <h3>Todd A Johnstone-Wright <small>Director</small></h3>
           <span class="pull-left board-img">
             <%= image_tag( 'todd-wright.jpg', :alt => 'Todd A Johnstone Wright', :title => 'Todd A Johnstone Wright' ) %>
           </span>
-          
+
           <p>For most of my professional life I have been engaged in the teaching, instructing and coaching of outdoor pursuits and sport; and I believe that PNA&apos;s focus on education and the promotion of paddlesport as a lifetime sport, aligns closely with my values as an educator, paddler and coach.  In addition to expanding access to British Canoe Union training, assessment and coach development, I believe that PNA has the potential to cultivate a renewed interest in, and passion for paddlesport.  The advent of PNA marked an exciting moment in the evolution of paddlesports in North America and I would be honored to help steward its continued organizational development.  While my primary interest is in the promotion of  paddlesport to the next generation of enthusiasts and athletes; I believe that my professional experience as an educator and coach, coupled with my work as a college administrator and volunteer experience with other national bodies will help further the advances made by PNA&apos;s Interim Board.  In addition, I hold current awards from the British Canoe Union, the American Canoe Association as well as guiding and instructing credentials in other outdoor disciplines and I recently began the process to become a UKCC Coach.</p>
         </span><!-- ./johnstone-wright -->
       </section><!-- ./board -->
@@ -168,8 +168,10 @@
             </ul>
           </div>
           <div class="col-md-6">
-            <p><strong>Regional Representative: </strong><br /><%= "#{region.rco.first_name} #{region.rco.last_name}" %></p>
-            <p><strong>Contact: </strong><br /><a href="mailto:<%= region.contact %>"><%= region.contact %></a></p>
+            <% unless region.rco.blank? %>
+              <p><strong>Regional Representative: </strong><br /><%= "#{region.rco.first_name} #{region.rco.last_name}" %></p>
+              <p><strong>Contact: </strong><br /><a href="mailto:<%= region.contact %>"><%= region.contact %></a></p>
+            <% end %>
           </div>
         </div>
         <% end %>
