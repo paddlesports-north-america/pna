@@ -1,15 +1,106 @@
-<h2>My Awards</h2>
-<% Pna::ProgramType::ALL.each do |type| %>
-  <% if awards_by_type( @member.awards, type ).any? %>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title"><%= type.capitalize %></h3>
-      </div>
-      <ul class="list-group">
-        <% awards_by_type( @member.awards, type ).each do |award| %>
-          <li class="list-group-item"><%= award.name %></li>
-        <% end %>
-      </ul>
+<h2>Member Status</h2>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="panel-title"><h4>My Qualifications</h4></div>
+  </div>
+  <% if @member.qualifications.any? %>
+  <table class="table table-striped">
+    <tr>
+      <th>Award</th>
+      <th>Completed On</th>
+      <th>Award Sent</th>
+      <th>Varified</th>
+    </tr>
+    <% @qualifications.each do |qual| %>
+    <tr>
+      <td><%= qual.award.name %></td>
+      <td><%= qual.awarded_on %></td>
+      <td><%= qual.printed_on.blank? ? status_tag( t( 'pna.not_sent' ), :warning ) : status_tag( qual.printed_on.to_s, :ok ) %></td>
+      <td><%= qual.verified ? status_tag( t( 'pna.verified'), :ok) : status_tag( t( 'pna.unverified' ), :warning ) %></td>
+    </tr>
+    <% end %>
+  </table>
+  <% else %>
+    <p><em>We have no qualifications on file for you at this time.</em></p>
+  <% end %>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="panel-title"><h4>First Aid Certifications</h4></div>
+  </div>
+
+  <% unless @member.first_aid_certifications.blank? %>
+    <table class="table table-striped">
+      <tr>
+        <th>Certification Type</th>
+        <th>Provider</th>
+        <th>Expiration Date</th>
+      </tr>
+      <% @member.first_aid_certifications.each do |cert| %>
+      <tr>
+        <td><%= "#{cert.certification_level} #{cert.certification_type}" %></td>
+        <td><%= cert.provider %></td>
+        <td><%= cert.expiration_date %></td>
+      </tr>
+      <% end %>
+    </table>
+  <% else %>
+    <div class="panel-body">
+      <span class="alert alert-danger">
+        <p>We have no first aid certifications on file!</p>
+      </span>
     </div>
   <% end %>
+</div>
+
+<% unless @courses_taken.blank? %>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="panel-title">
+      <h4>Training History</h4>
+    </div>
+  </div>
+  <table class="table table-striped">
+    <tr>
+      <th>Course</th>
+      <th>Course Director / Provider</th>
+      <th>Date</th>
+      <th>Result</th>
+    </tr>
+    <% @courses_taken.each do |p| %>
+    <tr>
+      <td><%= p.course.program.name %></td>
+      <td><%= p.course.course_director %></td>
+      <td><%= p.course.start_date %></td>
+      <td><%= p.result %></td>
+    </tr>
+    <% end %>
+  </table>
+</div>
+<% end %>
+
+<% unless @courses_delivered.blank? %>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="panel-title">
+      <h4>Coaching History</h4>
+    </div>
+  </div>
+  <table class="table table-striped">
+    <tr>
+      <th>Course</th>
+      <th>Course Director / Provider</th>
+      <th>Date</th>
+    </tr>
+    <% @courses_delivered.each do |course| %>
+    <tr>
+      <td><%= course.program.name %></td>
+      <td><%= course.course_director %></td>
+      <td><%= course.start_date %></td>
+    </tr>
+    <% end %>
+  </table>
+</div>
+
 <% end %>

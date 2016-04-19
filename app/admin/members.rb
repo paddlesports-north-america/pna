@@ -15,19 +15,19 @@ ActiveAdmin.register Member do
   filter :bcu_number
   filter :first_name
   filter :last_name
-  
+
   filter :addresses_state, as: :select, collection: proc { State.all }, label: 'State or Province'
   filter :addresses_country, as: :select, collection: proc { Country.order( 'name asc') }, label: 'Country'
 
   filter :has_qualifications, as: :select, :multiple => true, collection: proc { Award.order( "name asc" ) }
 
   filter :active
-  
+
   controller do
     def autocomplete
       respond_with Member.where( "lower( concat( first_name, ' ', last_name ) ) like ? OR cast( id as text ) like ?", "%#{params[ :q ].downcase}%", "%#{params[ :q ].downcase}%" ), :location => nil
     end
-    
+
     # def scoped_collection
     #   super.includes :memberships
     # end
@@ -39,37 +39,37 @@ ActiveAdmin.register Member do
     column :first_name
     column :last_name
     column :membership_expires
-    column( :email ) { |member| 
+    column( :email ) { |member|
       unless member.email_addresses.empty?
-        member.email_addresses.first 
+        member.email_addresses.first
       end
     }
-    column( :address1 ) { |member| 
+    column( :address1 ) { |member|
       unless member.addresses.empty?
-        member.addresses.first.address1 
+        member.addresses.first.address1
       end
     }
-    column( :address2 ) { |member| 
+    column( :address2 ) { |member|
       unless member.addresses.empty?
-        member.addresses.first.address2 
+        member.addresses.first.address2
       end
     }
-    column( :city ) { |member| 
+    column( :city ) { |member|
       unless member.addresses.empty?
-        member.addresses.first.city 
+        member.addresses.first.city
       end
     }
-    column( :state_or_province ) { |member| 
+    column( :state_or_province ) { |member|
       unless member.addresses.empty? || member.addresses.first.state.nil?
         member.addresses.first.state.abbr
       end
     }
-    column( :postal_code ) { |member| 
+    column( :postal_code ) { |member|
       unless member.addresses.empty?
         member.addresses.first.postal_code
       end
     }
-    column( :country ) { |member| 
+    column( :country ) { |member|
       unless member.addresses.empty?
         member.addresses.first.country.name
       end
@@ -77,7 +77,7 @@ ActiveAdmin.register Member do
     column( :qualifications ) { |member|
       unless member.qualifications.empty?
         member.qualifications.map { |q| q.award.name }
-      end  
+      end
     }
   end
 
@@ -100,12 +100,18 @@ ActiveAdmin.register Member do
       f.input :middle_name
       f.input :last_name
       f.input :use_middle_name
-      f.input :gender, :as => :select, :collection => Member::GENDER.inject({}) { |m,(k,v)| m.merge( t( "genders.#{k.to_s}" ) => v ) }
+      f.input :gender, :as => :select, :collection => Member::GENDER.inject({}) { |m,(k,v)| m.merge( t( "genders.#{k.to_s.humanize}" ) => v ) }
       f.input :birthdate, :as => :date_picker, :input_html => { "data-years" => "c-100:c+0" }, :hint => 'YYYY-MM-DD'
       if member.is_coach?
         f.input :show_on_coaches_page
       end
       f.input :is_charter_member, :as => :boolean
+    end
+
+    f.inputs do
+      f.input :password
+      f.input :password_confirmation
+      f.input :email, label: 'Primary Email', hint: 'Email used to log in to the member portal'
     end
 
     if member.new_record?
@@ -141,7 +147,7 @@ ActiveAdmin.register Member do
         n.input :body
       end
     end
-    
+
     f.actions
   end
 
@@ -162,7 +168,7 @@ ActiveAdmin.register Member do
 
     columns do
       column do
-        
+
         attributes_table do
           row t('pna.pna_number') do |m| m.id end
           row :bcu_number

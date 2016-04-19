@@ -22,6 +22,12 @@ PaddleSportsNorthAmerica::Application.routes.draw do
 
   get 'members/dashboard' => "members#dashboard"
 
+  get 'members/personal-info' => "members#info"
+  put 'members/personal-info' => "members#update"
+
+  get 'members/contact-info' => "members#contact"
+
+
   # Active Admin has poor support for polymorphic relationships
   # so we have to declare our routes manually
 

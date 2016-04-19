@@ -22,7 +22,7 @@ class Member < ActiveRecord::Base
 
   before_save :update_membership_expires
 
-  GENDER = { :male => 'm', :female => 'f' }
+  GENDER = { :male => 'm', :female => 'f', :other => 'o', :prefer_not_to_say => 'na' }
 
   scope :active, -> {
     joins( :memberships )
@@ -90,7 +90,11 @@ class Member < ActiveRecord::Base
   end
 
   def name
-    "#{first_name} #{last_name}"
+    if use_middle_name
+      "#{middle_name} #{last_name}"
+    else
+      "#{first_name} #{last_name}"
+    end
   end
 
   def email

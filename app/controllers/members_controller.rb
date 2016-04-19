@@ -4,6 +4,51 @@ class MembersController < ApplicationController
 
   def dashboard
     @member = current_member
+    @qualifications = Qualification.includes( :award ).where( :member_id => @member.id )
+
+    @courses_taken = CourseParticipant.includes(
+      :course => [ :program ]
+    ).where( :member_id => @member.id )
+
+    @courses_delivered = CourseCoach.includes(
+      :course => [ :program ]
+    ).where( :member_id => @member.id ).map { |cc| cc.course }
   end
 
+  def info
+    @member = current_member
+  end
+
+  def update
+    ap params[ :member ]
+    @member = current_member
+    if @member.update_attributes( params[ :member ] )
+      flash[ :notice ] = 'Your settings have been saved'
+      # redirect_to '/members/dashboard'
+      render :info
+    else
+      flash[ :alert ] = 'There was a problem saving your settings'
+      render :info
+    end
+  end
+
+  def contact
+    @member = current_member
+    @states = State.all.inject({}) { |m,state|
+      if m[ state.country_id ]
+        m[ state.country_id ].push( [ state.name, state.id ] )
+      else
+        m[ state.country_id ] = [[ state.name, state.id ]]
+      end
+
+      m
+    }
+    pcids = PRIORITY_COUNTRIES.map { |pc| pc[ 1 ] }
+    other_countries = Country.order( :name )
+      .select { |c| !pcids.include? c[ 1 ] }
+      .map { |c| [ c.name, c.id ] }
+
+    @countries = [["North America", PRIORITY_COUNTRIES],
+                  ["Other", other_countries ]]
+  end
 end

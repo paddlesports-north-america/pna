@@ -1,5 +1,12 @@
 <div class="sidenav member-sidenav">
   <ul class="nav">
-    <li>Hi THere </li>
+    <li><%= link_to 'Member Status', '/members/dashboard' %></li>
+    <li><%= link_to 'Personal Information', '/members/personal-info' %></li>
+    <li><%= link_to 'Contact Information', '/members/contact-info' %></li>
+    <li><%= link_to 'Account Settings', '/members/edit' %></li>
+    <% if current_member.is_coach? %>
+      <li><%= link_to 'Coach Page Settings', '#' %></li>
+      <li><%= link_to 'Centers', '#' %></li>
+    <% end %>
   </ul>
 </div>

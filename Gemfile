@@ -11,6 +11,7 @@ gem 'draper', '~> 1.0'
 
 # gem 'sass-rails', '>= 3.2'
 gem 'bootstrap-sass', '~> 3.0.3.0'
+gem 'bootstrap-datepicker-rails'
 
 gem 'yaml_db'
 
@@ -48,6 +49,10 @@ gem "quiet_assets", ">= 1.0.2", :group => :development
 
 gem "better_errors", "~> 0.7.2", :group => :development
 gem "binding_of_caller", "~> 0.7.1", :group => :development, :platforms => [:mri_19, :rbx]
+gem "awesome_print", :require => 'ap', :group => :development
+gem "meta_request", :group => :development
+gem "bullet", :group => :development
+# gem "ruby_gntp", :group => :development
 
 gem "figaro"
 

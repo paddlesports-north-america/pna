@@ -1,0 +1,55 @@
+<h2>Personal Information</h2>
+<%= form_for @member, url: '/members/personal-info' do |f| %>
+
+  <% if @member.errors.any? %>
+    <div class="alert alert-danger">
+      <% @member.errors.full_messages.each do |msg| %>
+        <p><%= msg %></p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <label>First Name</label>
+    <%= f.text_field :first_name, class: 'form-control' %>
+  </div>
+  <div class="form-group">
+    <label>Middle Name</label>
+    <%= f.text_field :middle_name, class: 'form-control' %>
+  </div>
+  <div class="checkbox">
+    <label>
+      <%= f.check_box :use_middle_name %> <span class="help-block">I prefer to go by my middle name</span>
+    </label>
+  </div>
+  <div class="form-group">
+    <label>Last Name</label>
+    <%= f.text_field :last_name, class: 'form-control' %>
+  </div>
+  <div class="form-group">
+    <label>Gender</label>
+    <%= f.select( :gender,
+        options_for_select(Member::GENDER.inject({}) { |m,(k,v)|
+          m.merge( t( "genders.#{k.to_s.humanize}" ) => v )
+        }), {}, { class: 'form-control' } )
+    %>
+  </div>
+  <div class="form-group">
+    <label>Birthdate</label>
+    <%= f.text_field :birthdate, class: 'form-control' %>
+  </div>
+  <div class="actions">
+    <%= f.submit value: 'Update Personal Info', class: 'btn btn-default' %>
+  </div>
+<% end %>
+<script type="text/javascript">
+  $( document ).on( 'ready', function(){
+
+    $( '#member_birthdate' ).datepicker({
+      format: 'dd/mm/yyyy',
+      autoclose: true
+    });
+
+    $( document ).off( 'ready' );
+  });
+</script>

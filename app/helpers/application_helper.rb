@@ -24,4 +24,8 @@ module ApplicationHelper
     end
     dates
   end
+
+  def status_tag( msg, status )
+    %Q(<span class="#{status}">#{msg}</span>).html_safe
+  end
 end

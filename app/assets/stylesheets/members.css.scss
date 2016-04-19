@@ -1,6 +1,7 @@
 /**
  * Styles for member portal stuff, including devise views for members
  */
+@import 'bootstrap-datepicker3';
 
  .alert-list {
    list-style: none;
@@ -22,4 +23,8 @@ ul.qualifications {
   h3 {
     margin-top: 0px;
   }
+}
+.panel-title h4 {
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
