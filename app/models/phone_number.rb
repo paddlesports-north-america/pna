@@ -2,7 +2,7 @@ class PhoneNumber < ActiveRecord::Base
   #has_paper_trail
 
   belongs_to :phoneable, :polymorphic => true
-  attr_accessible :ext, :label, :number, :phoneable_id, :phoneable_type, :public
+  attr_accessible :ext, :label, :number, :phoneable_id, :phoneable_type, :public, :is_primary
 
   validates :number, :presence => true
   validate :phone_number_is_valid

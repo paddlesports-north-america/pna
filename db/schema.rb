@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160415171811) do
+ActiveRecord::Schema.define(:version => 20160419144115) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.string   "resource_id",   :null => false
@@ -40,10 +40,12 @@ ActiveRecord::Schema.define(:version => 20160415171811) do
     t.datetime "created_at",                          :null => false
     t.datetime "updated_at",                          :null => false
     t.boolean  "public",           :default => false
+    t.boolean  "is_primary",       :default => false
   end
 
   add_index "addresses", ["addressable_type", "addressable_id"], :name => "index_addresses_on_addressable_type_and_addressable_id"
   add_index "addresses", ["country_id"], :name => "index_addresses_on_country_id"
+  add_index "addresses", ["is_primary", "addressable_type", "addressable_id"], :name => "uniq_primary_address"
   add_index "addresses", ["state_id"], :name => "index_addresses_on_state_id"
 
   create_table "admin_users", :force => true do |t|
@@ -155,9 +157,11 @@ ActiveRecord::Schema.define(:version => 20160415171811) do
     t.datetime "created_at",                        :null => false
     t.datetime "updated_at",                        :null => false
     t.boolean  "public",         :default => false
+    t.boolean  "is_primary",     :default => false
   end
 
   add_index "email_addresses", ["emailable_id", "emailable_type"], :name => "index_email_addresses_on_emailable_id_and_emailable_type"
+  add_index "email_addresses", ["is_primary", "emailable_type", "emailable_id"], :name => "uniq_primary_email"
 
   create_table "first_aid_certifications", :force => true do |t|
     t.string   "provider"
@@ -184,7 +188,6 @@ ActiveRecord::Schema.define(:version => 20160415171811) do
     t.boolean  "show_on_coaches_page",   :default => false
     t.boolean  "is_charter_member",      :default => false
     t.boolean  "use_middle_name",        :default => false
-    t.integer  "primary_email_id"
     t.string   "encrypted_password",     :default => "",    :null => false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
@@ -201,7 +204,6 @@ ActiveRecord::Schema.define(:version => 20160415171811) do
 
   add_index "members", ["bcu_number", "first_name", "last_name"], :name => "index_members_on_bcu_number_and_first_name_and_last_name"
   add_index "members", ["confirmation_token"], :name => "index_members_on_confirmation_token", :unique => true
-  add_index "members", ["primary_email_id"], :name => "index_members_on_primary_email_id", :unique => true
   add_index "members", ["reset_password_token"], :name => "index_members_on_reset_password_token", :unique => true
 
   create_table "membership_types", :force => true do |t|
@@ -244,8 +246,10 @@ ActiveRecord::Schema.define(:version => 20160415171811) do
     t.datetime "created_at",                        :null => false
     t.datetime "updated_at",                        :null => false
     t.boolean  "public",         :default => false
+    t.boolean  "is_primary",     :default => false
   end
 
+  add_index "phone_numbers", ["is_primary", "phoneable_type", "phoneable_id"], :name => "uniq_primary_phone"
   add_index "phone_numbers", ["phoneable_id", "phoneable_type"], :name => "index_phone_numbers_on_phoneable_id_and_phoneable_type"
 
   create_table "products", :force => true do |t|

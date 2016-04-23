@@ -12,11 +12,7 @@ class Member < ActiveRecord::Base
   #has_paper_trail
 
   has_contact_info
-  belongs_to :primary_email, class_name: 'EmailAddress'
-  after_commit :save_primary_email, on: :create
-
-  validates :primary_email, presence: true
-  default_scope { includes :primary_email }
+  # after_commit :save_primary_email, on: :create
 
   has_note
 
