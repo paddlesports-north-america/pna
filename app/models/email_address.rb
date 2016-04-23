@@ -5,6 +5,7 @@ class EmailAddress < ActiveRecord::Base
   attr_accessible :address, :emailable_id, :emailable_type, :label, :public, :is_primary
 
   validates :address, :email => true, :presence => true
+  validates :address, :uniqueness => true, :if => :is_primary
 
   def to_s
     address

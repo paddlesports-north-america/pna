@@ -6,11 +6,21 @@ module Pna
 
     module InstanceMethods
       def email
-        primary_email
+        primary_email.address
+      end
+
+      def email= email
+        primary_email.update_attributes( :address => email )
       end
 
       def primary_email
-        self.email_addresses.where( :is_primary => true ).first
+        @primary_email ||= self.email_addresses.where( :is_primary => true ).first_or_initialize
+      end
+
+      def primary_email= email
+          # @primary_email ||= self.email_addresses.where( :is_primary => true ).first_or_initialize
+          # m.update_attributes( address: email )
+          primary_email.address = email
       end
 
       def public_email_addresses
@@ -21,8 +31,16 @@ module Pna
         primary_phone_number
       end
 
+      def phone_number= number
+        primary_phone_number = number
+      end
+
       def primary_phone_number
-        self.phone_numbers.where( :is_primary => true ).first
+        @primary_phone ||= phone_numbers.where( is_primary: true ).first_or_initialize
+      end
+
+      def primary_phone_number= number
+        primary_phone_number.number = number
       end
 
       def public_phone_numbers
@@ -35,6 +53,10 @@ module Pna
 
       def primary_address
         self.addresses.where( :is_primary => true ).first
+      end
+
+      def primary_address= address
+        addresses.where( is_primary: true ).first_or_initialize.update_attributes( address )
       end
 
       def public_addresses

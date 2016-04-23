@@ -56,14 +56,47 @@ class Member < ActiveRecord::Base
 
   attr_accessible :bcu_number, :birthdate, :first_name, :gender, :last_name, :use_middle_name,
                   :middle_name, :addresses_attributes, :phone_numbers_attributes,
-                  :email_addresses_attributes, :memberships_attributes, :show_on_coaches_page, :is_charter_member
+                  :email_addresses_attributes, :memberships_attributes, :show_on_coaches_page, :is_charter_member,
+                  :primary_address, :primary_phone_number, :primary_email
 
   accepts_nested_attributes_for :addresses, :phone_numbers, :email_addresses, :memberships
 
   validates :first_name, :last_name, :presence => true
   validates :gender, :inclusion => { :in => Member::GENDER.values }
+  # validates :primary_phone_number, :primary_address, :presence => true
 
   validate :birthdate_in_the_past
+
+  validate :primary_email_is_valid
+  validate :primary_phone_number_is_valid
+  validate :primary_address_is_valid
+
+  def primary_email_is_valid
+    log_errors_from primary_email
+  end
+
+  def primary_phone_number_is_valid
+    log_errors_from primary_phone_numer
+  end
+
+  def primary_address_is_valid
+    log_errors_from primary_address
+  end
+
+  def log_errors_from obj
+    unless obj.valid?
+      obj.errors.full_messages.each do |err|
+        errors.add( :base, err )
+      end
+    end
+  end
+
+  #
+  # def save_primary_email
+  #   if primary_email.new_record? || primary_email.changed?
+  #     primary_email.save
+  #   end
+  # end
 
   def self.has_qualifications( aids )
     uids = Qualification.where( :award_id => aids ).pluck( :member_id ).uniq

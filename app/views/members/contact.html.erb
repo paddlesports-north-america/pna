@@ -1,21 +1,28 @@
 <h2>Contact Information</h2>
 <%= form_for @member, url: '/members/contact-info' do |f| %>
-
-  <div class="form-group">
-    <label>Email Address</label>
-    <%= f.email_field :email, class: 'form-control' %>
-    <p class="hint-block">Changing this address changes your login credentials</p>
-  </div>
-
-  <%= f.fields_for :phone_number, @member.phone_numbers.first do |phone_fields| %>
-    <div class="form-group">
-      <label>Phone Number</label>
-      <%= phone_fields.text_field :number, class: 'form-control' %>
+  <% if @member.errors.any? %>
+    <div class="alert alert-danger">
+      <% @member.errors.full_messages.each do |msg| %>
+        <p><%= msg %></p>
+      <% end %>
     </div>
   <% end %>
 
   <div class="form-group">
-    <%= f.fields_for :address, @member.addresses.first do |address_fields| %>
+    <label>Email Address</label>
+    <%= f.email_field :primary_email, class: 'form-control' %>
+    <p class="hint-block">Changing this address changes your login credentials</p>
+  </div>
+
+
+    <div class="form-group">
+      <label>Phone Number</label>
+      <%= f.telephone_field :primary_phone_number, class: 'form-control' %>
+    </div>
+
+
+  <div class="form-group">
+    <%= f.fields_for :primary_address, @member.addresses.first do |address_fields| %>
       <div class="form-group">
         <label>Address</label>
         <%= address_fields.text_field :address1, class: 'form-control' %>
@@ -35,12 +42,18 @@
 
       <div class="form-group">
         <label>Country</label>
-        <%= address_fields.select :country_id, grouped_options_for_select( @countries ) %>
+        <%= address_fields.select :country_id, grouped_options_for_select( @countries ), {}, { class: 'form-control country_id' } %>
       </div>
 
       <div class="form-group" id="state-group">
         <label>State or Province</label>
-        <%= address_fields.select :state_id, @states[ @member.addresses.first.country_id ] %>
+        <%= address_fields.select :state_id, @states[ @member.addresses.first.country_id ], {}, { class: 'form-control state_id' } %>
+      </div>
+
+      <div class="form-group form-btns">
+        <%= f.submit 'Update Contact Information', class: 'btn btn-success' %>
+        <!-- <input type="hidden" name="ref" value="update" /> -->
+        <%= hidden_field_tag 'ref', 'contact' %>
       </div>
     <% end %>
   </div>
@@ -53,7 +66,7 @@
   var selected_state = <%= @member.addresses.first.state_id %>;
 
   function filterStates() {
-    var cid = parseInt( $( '#member_address_country_id option:selected' ).val() );
+    var cid = parseInt( $( '.country_id option:selected' ).val() );
 
     if( states[ cid ] !== undefined ) {
       var state_options = states[ cid ].map( function( state ){
@@ -64,13 +77,13 @@
         return opt + '>' + state[ 0 ] + '</option>';
       }).join('');
 
-      $( '#member_address_state_id' ).html( state_options );
+      $( '.state_id' ).html( state_options );
       $( '#state-group' ).show();
       console.log( 'visible' );
       selected_state = null;
     } else {
       $( '#state-group' ).hide();
-      $( '#member_address_state_id' ).html('');
+      $( '.state_id' ).html('');
     }
   }
 
@@ -80,7 +93,7 @@
     $( document ).off( 'ready' );
   });
 
-  $( '#member_address_country_id' ).on( 'change', function(){
+  $( '.country_id' ).on( 'change', function(){
     filterStates();
   });
 </script>

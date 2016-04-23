@@ -20,20 +20,27 @@ class MembersController < ApplicationController
   end
 
   def update
-    ap params[ :member ]
     @member = current_member
+
+    if params[ :ref ] == 'contact'
+      prime_for_address
+    end
+    
     if @member.update_attributes( params[ :member ] )
       flash[ :notice ] = 'Your settings have been saved'
-      # redirect_to '/members/dashboard'
-      render :info
     else
       flash[ :alert ] = 'There was a problem saving your settings'
-      render :info
     end
+
+    render params[ :ref ].to_sym
   end
 
   def contact
     @member = current_member
+    prime_for_address
+  end
+
+  def prime_for_address
     @states = State.all.inject({}) { |m,state|
       if m[ state.country_id ]
         m[ state.country_id ].push( [ state.name, state.id ] )

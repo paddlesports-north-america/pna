@@ -38,8 +38,9 @@
     <label>Birthdate</label>
     <%= f.text_field :birthdate, class: 'form-control' %>
   </div>
-  <div class="actions">
-    <%= f.submit value: 'Update Personal Info', class: 'btn btn-default' %>
+  <div class="form-group form-btns">
+    <%= f.submit value: 'Update Personal Info', class: 'btn btn-success' %>
+    <%= hidden_field_tag 'ref', 'info' %>
   </div>
 <% end %>
 <script type="text/javascript">
