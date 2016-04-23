@@ -93,19 +93,19 @@ class Member < ActiveRecord::Base
     end
   end
 
-  def email
-    primary_email.address rescue nil
-  end
+  # def email
+  #   primary_email.address rescue nil
+  # end
+  #
+  # def email= email
+  #   self.primary_email = email_addresses.where( address: email ).first_or_initialize
+  # end
 
-  def email= email
-    self.primary_email = email_addresses.where( address: email ).first_or_initialize
-  end
-
-  def public_email_addresses
-    email_addresses.select do |e|
-      e.public?
-    end
-  end
+  # def public_email_addresses
+  #   email_addresses.select do |e|
+  #     e.public?
+  #   end
+  # end
 
   def to_s
     "#{first_name} #{last_name}"

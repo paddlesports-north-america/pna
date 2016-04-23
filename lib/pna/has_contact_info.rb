@@ -4,6 +4,44 @@ module Pna
       base.send :extend, ClassMethods
     end
 
+    module InstanceMethods
+      def email
+        primary_email
+      end
+
+      def primary_email
+        self.email_addresses.where( :is_primary => true ).first
+      end
+
+      def public_email_addresses
+        self.email_addresses.where( :public => true )
+      end
+
+      def phone_number
+        primary_phone_number
+      end
+
+      def primary_phone_number
+        self.phone_numbers.where( :is_primary => true ).first
+      end
+
+      def public_phone_numbers
+        self.phone_numbers.where( :public => true )
+      end
+
+      # def address
+      #   primary_address
+      # end
+
+      def primary_address
+        self.addresses.where( :is_primary => true ).first
+      end
+
+      def public_addresses
+        self.addresses.where( :public => true )
+      end
+    end
+
     module ClassMethods
       def has_contact_info
         has_many :phone_numbers,
@@ -32,43 +70,9 @@ module Pna
         scope :addresses_country_eq, lambda { |country_id|
           self.joins(:addresses).where( 'addresses.country_id = ?', country_id )
         }
+
+        include InstanceMethods
       end
-    end
-
-    def email
-      primary_email
-    end
-
-    def primary_email
-      self.email_addresses.where( :is_primary => true ).first
-    end
-
-    def public_email_addresses
-      self.email_addresses.where( :public => true )
-    end
-
-    def phone_number
-      primary_phone_number
-    end
-
-    def primary_phone_number
-      self.phone_numbers.where( :is_primary => true ).first
-    end
-
-    def public_phone_numbers
-      self.phone_numbers.where( :public => true )
-    end
-
-    # def address
-    #   primary_address
-    # end
-
-    def primary_address
-      self.addresses.where( :is_primary => true ).first
-    end
-
-    def public_addresses
-      self.addresses.where( :public => true )
     end
   end
 end

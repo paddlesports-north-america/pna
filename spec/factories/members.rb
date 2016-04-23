@@ -8,6 +8,7 @@ FactoryGirl.define do
     middle_name "B."
     gender "m"
     birthdate "1978-05-11"
+    confirmed_at "2015-05-11"
 
     factory :member_with_emails do
       after(:create) do |member|
