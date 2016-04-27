@@ -1,4 +1,8 @@
 en:
+  activerecord:
+    attributes:
+      email_address:
+        address: Email Address
   pna:
     name: Paddlesports North America
     logo: logo-text-dark.en.png

@@ -116,6 +116,7 @@ GEM
     factory_girl_rails (4.5.0)
       factory_girl (~> 4.5.0)
       railties (>= 3.0.0)
+    ffaker (2.2.0)
     figaro (1.0.0)
       thor (~> 0.14)
     formtastic (2.3.1)
@@ -289,6 +290,7 @@ DEPENDENCIES
   email_spec (>= 1.4.0)
   email_validator (~> 1.4.0)
   factory_girl_rails (>= 4.2.0)
+  ffaker
   figaro
   inherited_resources (~> 1.4.0)
   jquery-rails (~> 2.2.1)
