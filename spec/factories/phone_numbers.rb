@@ -5,6 +5,7 @@ FactoryGirl.define do
     label "Work"
     number "360 555 1234"
     ext "543"
+    is_primary false
     phoneable factory: :member
   end
 end

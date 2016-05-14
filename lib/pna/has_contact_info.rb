@@ -6,21 +6,29 @@ module Pna
 
     module InstanceMethods
       def email
-        primary_email.address
+        primary_email.nil? ? nil : primary_email.address
       end
 
       def email= email
-        primary_email.update_attributes( :address => email )
+        if self.new_record?
+          @the_primary_email = self.email_addresses.new( :is_primary => true, address: email )
+        else
+          primary_email.update_attributes( :address => email )
+        end
       end
 
       def primary_email
-        @primary_email ||= self.email_addresses.where( :is_primary => true ).first_or_initialize
-      end
-
-      def primary_email= email
-          # @primary_email ||= self.email_addresses.where( :is_primary => true ).first_or_initialize
-          # m.update_attributes( address: email )
-          primary_email.address = email
+        if @the_primary_email
+          @the_primary_email
+        elsif self.new_record?
+          if email_addresses.any?
+            email_addresses.first.assign_attributes( is_primary: true )
+          else
+            nil
+          end
+        else
+          @the_primary_email ||= self.email_addresses.where( :is_primary => true ).first # _or_initialize
+        end
       end
 
       def public_email_addresses
@@ -28,34 +36,44 @@ module Pna
       end
 
       def phone_number
-        primary_phone_number
+        primary_phone_number.nil? ? nil : primary_phone_number.number
       end
 
       def phone_number= number
-        primary_phone_number = number
+        if self.new_record?
+          @the_primary_phone = self.phone_numbers.new( :is_primary => true, :number => number )
+        else
+          phone_numbers.where( is_primary: true ).first_or_initialize.update_attributes( number: number )
+        end
       end
 
       def primary_phone_number
-        @primary_phone ||= phone_numbers.where( is_primary: true ).first_or_initialize
-      end
-
-      def primary_phone_number= number
-        primary_phone_number.number = number
+        if @the_primary_phone
+          @the_primary_phone
+        elsif self.new_record?
+          if phone_numbers.any?
+            @the_primary_phone = phone_numbers.first.assign_attributes( is_primary: true )
+          else
+            nil
+          end
+        else
+          @the_primary_phone ||= phone_numbers.where( is_primary: true ).first
+        end
       end
 
       def public_phone_numbers
         self.phone_numbers.where( :public => true )
       end
 
-      # def address
-      #   primary_address
-      # end
+      def mailing_address
+        primary_address
+      end
 
       def primary_address
         self.addresses.where( :is_primary => true ).first
       end
 
-      def primary_address= address
+      def mailing_address= address
         addresses.where( is_primary: true ).first_or_initialize.update_attributes( address )
       end
 
@@ -73,8 +91,8 @@ module Pna
 
         has_many :email_addresses,
           :as => :emailable,
-          :dependent => :delete_all,
-          :validate => true
+          :dependent => :delete_all #,
+          #:validate => true
 
         has_many :addresses,
           :as => :addressable,

@@ -5,7 +5,7 @@ class Qualification < ActiveRecord::Base
   belongs_to :course
   attr_accessible :printed_on, :awarded_on, :award_id, :member_id, :course_id, :verified
 
-  validates :member, :award, :presence => true
-  
+  validates :member_id, :award_id, :presence => true
+
   delegate :award_type, to: :award
 end

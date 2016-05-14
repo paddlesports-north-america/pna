@@ -1,14 +1,16 @@
 # Read about factories at https://github.com/thoughtbot/factory_girl
+require 'ffaker'
 
 FactoryGirl.define do
   factory :member do
     bcu_number "266762"
-    first_name "John"
-    last_name "Doe"
-    middle_name "B."
+    first_name FFaker::Name.first_name
+    last_name FFaker::Name.last_name
+    middle_name FFaker::Name.first_name
     gender "m"
     birthdate "1978-05-11"
-    confirmed_at "2015-05-11"
+    # confirmed_at "2015-05-11"
+    email FFaker::Internet.email
 
     factory :member_with_emails do
       after(:create) do |member|

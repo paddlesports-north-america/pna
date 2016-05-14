@@ -1,12 +1,10 @@
 class Member < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, # :validatable,
-         :confirmable
+  # devise :database_authenticatable, :registerable,
+  #        :recoverable, :rememberable, :trackable, # :validatable,
+  #        :confirmable
 
-  # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me
   # include HasContactInfo
 
   #has_paper_trail
@@ -57,9 +55,18 @@ class Member < ActiveRecord::Base
   attr_accessible :bcu_number, :birthdate, :first_name, :gender, :last_name, :use_middle_name,
                   :middle_name, :addresses_attributes, :phone_numbers_attributes,
                   :email_addresses_attributes, :memberships_attributes, :show_on_coaches_page, :is_charter_member,
-                  :primary_address, :primary_phone_number, :primary_email
+                  :mailing_address, :phone_number, :email, :password, :password_confirmation, :remember_me
 
   accepts_nested_attributes_for :addresses, :phone_numbers, :email_addresses, :memberships
+
+  # before_validation :assign_primary_email
+  #
+  # def assign_primary_email
+  #   # if we have an email address, butno primary, assign first as primary
+  #   if email_addresses.any? && primary_email.nil?
+  #     email_addresses.first.update_attributes( is_primary: true )
+  #   end
+  # end
 
   validates :first_name, :last_name, :presence => true
   validates :gender, :inclusion => { :in => Member::GENDER.values }
@@ -67,16 +74,16 @@ class Member < ActiveRecord::Base
 
   validate :birthdate_in_the_past
 
-  validate :primary_email_is_valid
+  # validate :primary_email_is_valid
   validate :primary_phone_number_is_valid
   validate :primary_address_is_valid
 
-  def primary_email_is_valid
-    log_errors_from primary_email
-  end
+  # def primary_email_is_valid
+  #   log_errors_from primary_email
+  # end
 
   def primary_phone_number_is_valid
-    log_errors_from primary_phone_numer
+    log_errors_from primary_phone_number
   end
 
   def primary_address_is_valid
@@ -84,11 +91,15 @@ class Member < ActiveRecord::Base
   end
 
   def log_errors_from obj
-    unless obj.valid?
+    unless obj.nil? || obj.valid?
       obj.errors.full_messages.each do |err|
         errors.add( :base, err )
       end
     end
+  end
+
+  def check_contact_info
+
   end
 
   #
@@ -104,19 +115,20 @@ class Member < ActiveRecord::Base
   end
 
   #Override devise to work with EmailAddresses
-  def self.having_email email
-    Member.includes( :email_addresses ).where( 'members.primary_email_id = email_addresses.id AND email_addresses.address = ?', email ).first
-  end
+  # def self.having_email email
+  #   # Member.includes( :email_addresses ).where( 'members.primary_email_id = email_addresses.id AND email_addresses.address = ?', email ).first
+  #   Member.includes( :email_addresses ).where( 'email_addresses.is_primary = ? AND email_addresses.address = ?', true, email )
+  # end
 
   #Override devise to work with EmailAddresses
-  def self.find_first_by_auth_conditions warden_conditions
-    conditions = warden_conditions.dup
-    if email = conditions.delete(:email)
-      having_email email
-    else
-      super(warden_conditions)
-    end
-  end
+  # def self.find_first_by_auth_conditions warden_conditions
+  #   conditions = warden_conditions.dup
+  #   if email = conditions.delete(:email)
+  #     having_email email
+  #   else
+  #     super(warden_conditions)
+  #   end
+  # end
 
   def name
     if use_middle_name
